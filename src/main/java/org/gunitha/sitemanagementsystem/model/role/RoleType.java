@@ -1,0 +1,8 @@
+package org.gunitha.sitemanagementsystem.model.role;
+
+public enum RoleType {
+
+//	APPLICATION_ADMIN, ACCOUNT_ADMIN, DEALERSHIP_ADMIN,APPLICATION_USER, ACCOUNT_USER,DEALERSHIP_USER,
+//	SITE_OWNER_USER, SITE_ENGINEER_USER
+	
+}

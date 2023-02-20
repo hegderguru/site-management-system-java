@@ -1,0 +1,114 @@
+/*
+sudo su - postgres
+
+alter user sitemanagement with encrypted password 'sitemanagement';
+createuser sitemanagement
+createdb sitemanagement
+psql
+alter user sitemanagement with encrypted password 'sitemanagement';
+grant all privileges on database sitemanagement to sitemanagement;
+
+*/
+
+CREATE SEQUENCE IF NOT EXISTS USER_SEQUENCE START WITH 1000 INCREMENT BY 20
+/
+CREATE TABLE IF NOT EXISTS USERS (ID bigint PRIMARY KEY,USERNAME VARCHAR(255), PASSWORD varchar(255),FIRST_NAME VARCHAR(255),
+				MIDDLE_NAME VARCHAR(255),LAST_NAME VARCHAR(255),EMAIL VARCHAR(255),PHONE VARCHAR(255),USER_TYPE VARCHAR(255),
+				EXPIRED BOOLEAN, LOCKED BOOLEAN, CREDENTIAL_EXPIRED BOOLEAN,ENABLED BOOLEAN)
+/
+CREATE SEQUENCE IF NOT EXISTS ROLE_SEQUENCE START WITH 1000 INCREMENT BY 20				
+/
+CREATE TABLE IF NOT EXISTS ROLE (ID bigint PRIMARY KEY,NAME VARCHAR(255), ROLE_TYPE varchar(255),PRIVILEGE_TYPE VARCHAR(255))
+/	
+CREATE TABLE USER_ROLE(USER_ID BIGINT, ROLE_ID BIGINT, 
+		CONSTRAINT USER_FK FOREIGN KEY(USER_ID) REFERENCES USERS(ID),CONSTRAINT ROLE_FK FOREIGN KEY(ROLE_ID) REFERENCES ROLE(ID))
+/
+
+/*
+http://localhost:8080/application/register
+Content-Type application/json
+{
+        "name": "Site Management System",
+        "number": "SMS",
+        "email":"hegde.r.guru@gmail.com",
+        "phone":"9886630000"
+}
+
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'APPLICATION_ADMIN_WRITE','ADMIN','APPLICATION_ADMIN','WRITE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'APPLICATION_ADMIN_READ','ADMIN','APPLICATION_ADMIN','READ');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'APPLICATION_ADMIN_UPDATE','ADMIN','APPLICATION_ADMIN','UPDATE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'APPLICATION_ADMIN_SHARE','ADMIN','APPLICATION_ADMIN','SHARE');
+
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'ACCOUNT_ADMIN_WRITE','ADMIN','ACCOUNT_ADMIN','WRITE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'ACCOUNT_ADMIN_READ','ADMIN','ACCOUNT_ADMIN','READ');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'ACCOUNT_ADMIN_UPDATE','ADMIN','ACCOUNT_ADMIN','UPDATE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'ACCOUNT_ADMIN_SHARE','ADMIN','ACCOUNT_ADMIN','SHARE');
+
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'DEALERSHIP_ADMIN_WRITE','ADMIN','DEALERSHIP_ADMIN','WRITE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'DEALERSHIP_ADMIN_READ','ADMIN','DEALERSHIP_ADMIN','READ');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'DEALERSHIP_ADMIN_UPDATE','ADMIN','DEALERSHIP_ADMIN','UPDATE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'DEALERSHIP_ADMIN_SHARE','ADMIN','DEALERSHIP_ADMIN','SHARE');
+
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'APPLICATION_USER_WRITE','USER','APPLICATION_USER','WRITE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'APPLICATION_USER_READ','USER','APPLICATION_USER','READ');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'APPLICATION_USER_UPDATE','USER','APPLICATION_USER','UPDATE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'APPLICATION_USER_SHARE','USER','APPLICATION_USER','SHARE');
+
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'ACCOUNT_USER_WRITE','USER','ACCOUNT_USER','WRITE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'ACCOUNT_USER_READ','USER','ACCOUNT_USER','READ');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'ACCOUNT_USER_UPDATE','USER','ACCOUNT_USER','UPDATE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'ACCOUNT_USER_SHARE','USER','ACCOUNT_USER','SHARE');
+
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'DEALERSHIP_USER_WRITE','USER','DEALERSHIP_USER','WRITE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'DEALERSHIP_USER_READ','USER','DEALERSHIP_USER','READ');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'DEALERSHIP_USER_UPDATE','USER','DEALERSHIP_USER','UPDATE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'DEALERSHIP_USER_SHARE','USER','DEALERSHIP_USER','SHARE');
+
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'SITE_USER_WRITE','USER','SITE_USER','WRITE');
+insert into role(id,name,role_level,role_type,privilege_type) values((select nextval('ROLE_SEQUENCE')),'SITE_USER_READ','USER','SITE_USER','READ');
+
+
+
+insert into role(id,name,role_level,privilege_type) values((select nextval('ROLE_SEQUENCE')),'ADMIN_WRITE','ADMIN','WRITE');
+insert into role(id,name,role_level,privilege_type) values((select nextval('ROLE_SEQUENCE')),'ADMIN_READ','ADMIN','READ');
+insert into role(id,name,role_level,privilege_type) values((select nextval('ROLE_SEQUENCE')),'ADMIN_UPDATE','ADMIN','UPDATE');
+insert into role(id,name,role_level,privilege_type) values((select nextval('ROLE_SEQUENCE')),'ADMIN_SHARE','ADMIN','SHARE');
+
+insert into role(id,name,role_level,privilege_type) values((select nextval('ROLE_SEQUENCE')),'USER_WRITE','USER','WRITE');
+insert into role(id,name,role_level,privilege_type) values((select nextval('ROLE_SEQUENCE')),'USER_READ','USER','READ');
+insert into role(id,name,role_level,privilege_type) values((select nextval('ROLE_SEQUENCE')),'USER_UPDATE','USER','UPDATE');
+insert into role(id,name,role_level,privilege_type) values((select nextval('ROLE_SEQUENCE')),'USER_SHARE','USER','SHARE');
+
+http://localhost:8080/application/users/user/add
+Content-Type application/json
+{
+    "username": "smsghegde",
+    "password":"smsghegde",
+    "firstName": "Guru",
+    "middleName": "Raghavendra",
+    "lastName": "Hegde",
+    "email": "hegde.r.guru@gmail.com",
+    "phone": "9886630000",
+    "expired": false,
+    "locked": false,
+    "credentialExpired": false,
+    "enabled": true,
+    "roleLevel": "ADMIN",
+    "privilegeType": "WRITE",
+    "address": {
+        "name": "sms",
+        "number": "sms",
+        "addressLine1": "sms",
+        "addressLine2": "sms",
+        "addressLine3": "sms",
+        "village": "sms",
+        "city": "sms",
+        "state": "sms",
+        "country": "sms",
+        "zipCode": "581145",
+        "addressType": "CURRENT"
+    },
+    "application": {
+		"name":"Site Management System"
+	}
+} */
